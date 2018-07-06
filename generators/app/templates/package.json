@@ -1,0 +1,9 @@
+{
+  "name": "jquery-mobile-pc",
+  "version": "1.0.0",
+  "private": true,
+  "author": "wulimark",
+  "dependencies": {
+    "zepto": "^1.2.0"
+  }
+}

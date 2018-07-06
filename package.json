@@ -1,0 +1,37 @@
+{
+  "name": "generator-jquery-mobile-pc",
+  "version": "1.0.0",
+  "description": "a generator based jquery and zepto for mobile&amp;pc",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wulimark/generator-jquery-mobile-pc.git"
+  },
+  "author": "wulimark@hz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wulimark/generator-jquery-mobile-pc/issues"
+  },
+  "homepage": "https://github.com/wulimark/generator-jquery-mobile-pc#readme",
+  "files": [
+    "generators"
+  ],
+  "keywords": [
+    "yeoman-generator",
+    "jquery",
+    "zepto",
+    "mobile",
+    "pc"
+  ],
+  "dependencies": {
+    "chai": "^4.0.2",
+    "chalk": "^2.0.1",
+    "fs-extra": "^3.0.1",
+    "mocha": "^3.4.2",
+    "yeoman-generator": "^1.1.1",
+    "yosay": "^2.0.0"
+  }
+}

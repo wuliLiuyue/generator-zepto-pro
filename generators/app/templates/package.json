@@ -4,6 +4,7 @@
   "private": true,
   "author": "wulimark",
   "dependencies": {
+    "jquery": "^1.12.4",
     "zepto": "^1.2.0"
   }
 }

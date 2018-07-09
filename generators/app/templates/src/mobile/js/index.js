@@ -1,1 +1,5 @@
-import $ from 'zepto';
+async function load() {
+  console.log('test');
+}
+
+export default load;

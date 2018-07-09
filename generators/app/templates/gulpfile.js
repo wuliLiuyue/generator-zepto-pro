@@ -13,13 +13,14 @@ const gulp = require('gulp'),
     webpack = require('webpack'),
     webpackConfig = require('./config/webpack.conf.js'),
     connect = require('gulp-connect'),
-    yargs = require('yargs');
+    yargs = require('yargs'),
+    browserSync = require('browser-sync').create();
 
-//移动端3000端口, pc端4000端口
+//移动端8000端口, pc端9000端口
 const mode = yargs.argv.mode;
 const host = {
     path: `dist/${mode}/`,
-    port: mode == 'mobile' ? 3000 : 4000,
+    port: mode == 'mobile' ? 8000 : 9000,
     html: 'index.html'
 };
 
@@ -27,6 +28,29 @@ const host = {
 const browser = os.platform() === 'linux' ? 'Google chrome' : (
   os.platform() === 'darwin' ? 'Google chrome' : (
   os.platform() === 'win32' ? 'chrome' : 'firefox'));
+
+//清理编译目录
+gulp.task('clean', function(done) {
+    gulp.src(['dist'])
+    .pipe(clean())
+    .on('end', done);
+});
+
+//创建静态服务
+gulp.task('connect', function() {
+    connect.server({
+        root: host.path,
+        port: host.port,
+        livereload: true
+    });
+});
+
+//文件转移
+gulp.task('file', function (done) {
+    gulp.src([`src/${mode}/**/*.html`])
+    .pipe(gulp.dest(`dist/${mode}`))
+    .on('end', done);
+});
 
 //将图片拷贝到目标目录
 gulp.task('copy:img', function(done) {
@@ -42,19 +66,19 @@ gulp.task('stylus:min', function(done) {
     .on('end', done);
 });
 
-//将js加上10位md5, 并修改html中的引用路径
-gulp.task('md5:js', ['build:js'], function(done) {
-    gulp.src(`src/${mode}/js/*.js`)
-    .pipe(md5(10, `src/${mode}/**/*.html`))
-    .pipe(gulp.dest(`dist/${mode}/js`))
+//将css加上10位md5, 并修改html中的引用路径
+gulp.task('md5:css', [], function(done) {
+    gulp.src(`dist/${mode}/css/*.css`)
+    .pipe(md5(10, `dist/${mode}/**/*.html`))
+    .pipe(gulp.dest(`dist/${mode}/css`))
     .on('end', done);
 });
 
-//将css加上10位md5, 并修改html中的引用路径
-gulp.task('md5:css', ['sprite'], function(done) {
-    gulp.src(`src/${mode}/css/*.css`)
-    .pipe(md5(10, `src/${mode}/**/*.html`))
-    .pipe(gulp.dest(`dist/${mode}/css`))
+//将js加上10位md5, 并修改html中的引用路径
+gulp.task('md5:js', ['build:js'], function(done) {
+    gulp.src(`dist/${mode}/js/*.js`)
+    .pipe(md5(10, `dist/${mode}/**/*.html`))
+    .pipe(gulp.dest(`dist/${mode}/js`))
     .on('end', done);
 });
 
@@ -73,26 +97,13 @@ gulp.task('sprite', ['copy:img', 'stylus:min'], function(done) {
     .on('end', done);
 });
 
-gulp.task('clean', function(done) {
-    gulp.src(['dist'])
-    .pipe(clean())
-    .on('end', done);
-});
-
+//实时编译
 gulp.task('watch', function(done) {
-    gulp.watch(`src/${mode}/**/*`, ['stylus:min', 'build:js'])
+    gulp.watch(`src/${mode}/**/*`, ['stylus:min', 'build:js', 'file'])
     .on('end', done);
 });
 
-gulp.task('connect', function() {
-    console.log('服务启动');
-    connect.server({
-        root: host.path,
-        port: host.port,
-        livereload: true
-    });
-});
-
+//打开浏览器
 gulp.task('open', function(done) {
     gulp.src('')
     .pipe(gulpOpen({
@@ -100,6 +111,15 @@ gulp.task('open', function(done) {
         uri: `http://localhost:${host.port}/index.html`
     }))
     .on('end', done);
+});
+
+//浏览器重载
+gulp.task('browser-sync', function () {
+    browserSync.init({
+        proxy: `127.0.0.1:${host.port}`
+    });
+    gulp.watch('src/**/*', ['copy:img', 'file', 'stylus:min', 'build:js', 'watch']);
+    gulp.watch('src/**/*').on('change', browserSync.reload);
 });
 
 const devCompiler = webpack(webpackConfig);
@@ -113,8 +133,11 @@ gulp.task('build:js', function(callback) {
     });
 });
 
-//发布
-gulp.task('default', ['connect', 'md5:css', 'md5:js', 'open']);
+//编译
+gulp.task('pack', ['copy:img', 'file', 'stylus:min', 'build:js']);
 
 //开发
-gulp.task('dev', ['connect', 'copy:img', 'stylus:min', 'build:js', 'watch', 'open']);
+gulp.task('dev', ['connect', 'pack', 'watch', 'browser-sync']);
+
+//发布
+gulp.task('default', ['pack', 'md5:css', 'md5:js']);

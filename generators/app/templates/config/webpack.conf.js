@@ -22,12 +22,39 @@ function getEntry() {
 module.exports = {
     mode: 'development',
     cache: true,
-    devtool: "#source-map",
+    devtool: true,
     entry: getEntry(),
     output: {
         path: path.join(__dirname, `../dist/${mode}/js`),
         publicPath: `../dist/${mode}/js`,
         filename: '[name].js',
         chunkFilename: '[chunkhash].js'
+    },
+    module: {
+        noParse: /es6-promise\.js$/,
+        rules: [
+            {
+                test: /\.js$/,
+                loader: 'eslint-loader',
+                enforce: 'pre',
+                include: [path.resolve('src')],
+                options: {
+                    formatter: require('eslint-friendly-formatter')
+                }
+            },
+            {
+                test: /\.js$/,
+                loader: 'babel-loader?cacheDirectory=true',
+                include: [path.resolve('src')]
+            },
+            {
+                test: /\.(woff2?|eot|ttf|otf|png|jpg|gif|svg)$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 5000,
+                    name: '[name].[ext]?[hash]'
+                }
+            }
+        ]
     }
 };

@@ -4,7 +4,9 @@
   "private": true,
   "author": "wulimark",
   "scripts": {
-    "dev:mobile": "gulp dev --mode=mobile"
+    "dev:mobile": "gulp dev --mode=mobile",
+    "build:mobile": "gulp --mode=mobile",
+    "clean:mobile": "gulp clean --mode=mobile"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -12,6 +14,21 @@
     "zepto": "^1.2.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.5",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "browser-sync": "^2.24.5",
+    "es6-promise": "^4.2.4",
+    "eslint": "^4.19.1",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-html": "^4.0.5",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0",
     "gulp-concat": "^2.6.1",
@@ -24,6 +41,7 @@
     "gulp-stylus": "^2.7.0",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
+    "url-loader": "^1.0.1",
     "webpack": "^4.15.1",
     "yargs": "^12.0.1"
   }

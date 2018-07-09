@@ -3,9 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "author": "wulimark",
+  "scripts": {
+    "dev": "node ./bin/development.js"
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "jquery": "^1.12.4",
     "zepto": "^1.2.0"
+  },
+  "devDependencies": {
+    "koa": "^2.5.1",
+    "koa-onerror": "^4.0.0",
+    "koa-static": "^5.0.0"
   }
 }

@@ -13,8 +13,8 @@ export function getAndroidVersion(ua) {
 /**
  * getAppVersion
  * @return {object} app
- *    @return {string} app.platform 平台名 ios / android
- *    @return {string} app.version app版本号
+ * @return {string} app.platform 平台名 ios / android
+ * @return {string} app.version app版本号
  */
 
 export function getAppVersion(ua) {

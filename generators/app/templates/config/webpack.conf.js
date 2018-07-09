@@ -1,9 +1,9 @@
 const path = require('path');
-const webpack = require('webpack');
 const fs = require('fs');
-const uglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
-const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
-const srcDir = path.resolve(__dirname, '../src');
+const yargs = require('yargs');
+const webpack = require('webpack');
+const mode = yargs.argv.mode;
+const srcDir = path.resolve(__dirname, `../src/${mode}`);
 
 //获取多页面的每个入口文件, 用于配置中的entry
 function getEntry() {
@@ -20,21 +20,14 @@ function getEntry() {
 }
 
 module.exports = {
+    mode: 'development',
     cache: true,
     devtool: "#source-map",
     entry: getEntry(),
     output: {
-        path: path.join(__dirname, 'js'),
-        publicPath: 'js',
+        path: path.join(__dirname, `../dist/${mode}/js`),
+        publicPath: `../dist/${mode}/js`,
         filename: '[name].js',
         chunkFilename: '[chunkhash].js'
-    },
-    plugins: [
-        new CommonsChunkPlugin('common.js'),
-        new uglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        })
-    ]
+    }
 };

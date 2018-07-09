@@ -4,12 +4,26 @@
   "private": true,
   "author": "wulimark",
   "scripts": {
-    "dev": "node ./scripts/development.js"
+    "dev:mobile": "gulp dev --mode=mobile"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "jquery": "^1.12.4",
     "zepto": "^1.2.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-connect": "^5.5.0",
+    "gulp-css-base64": "^1.3.4",
+    "gulp-css-spriter": "^0.4.0",
+    "gulp-cssmin": "^0.2.0",
+    "gulp-md5-plus": "^1.0.3",
+    "gulp-open": "^3.0.1",
+    "gulp-stylus": "^2.7.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.8",
+    "webpack": "^4.15.1"
+  }
 }

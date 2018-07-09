@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const process = require('process');
 const assets = require('koa-static');
 const koaOnError = require('koa-onerror');
 

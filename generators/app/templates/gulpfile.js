@@ -7,7 +7,7 @@ const gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     cssmin = require('gulp-cssmin'),
     md5 = require('gulp-md5-plus'),
-    clean = require('gulp-clean'),
+    del = require('del'),
     spriter = require('gulp-css-spriter'),
     base64 = require('gulp-css-base64'),
     webpack = require('webpack'),
@@ -49,21 +49,23 @@ gulp.task('connect', function() {
 });
 
 /**
- * 文件转移
+ * 图片文件转移
  */
 
-gulp.task('file', function (done) {
-    gulp.src([`src/${mode}/**/*.html`])
-    .pipe(gulp.dest(`dist/${mode}`))
+gulp.task('copy:img', function(done) {
+    gulp.src([`src/${mode}/img/*`])
+    .pipe(gulp.dest(`dist/${mode}/img`))
     .on('end', done);
 });
 
 /**
- * 将图片拷贝到目标目录
+ * html文件转移
  */
 
-gulp.task('copy:img', function(done) {
-    gulp.src([`src/${mode}/img/*`]).pipe(gulp.dest(`dist/${mode}/img`)).on('end', done);
+gulp.task('html', function (done) {
+    gulp.src([`src/${mode}/**/*.html`])
+    .pipe(gulp.dest(`dist/${mode}`))
+    .on('end', done);
 });
 
 /**
@@ -74,6 +76,24 @@ gulp.task('stylus:min', function(done) {
     gulp.src([`src/${mode}/css/*`])
     .pipe(stylus())
     .pipe(concat('common.min.css'))
+    .pipe(gulp.dest(`dist/${mode}/css`))
+    .on('end', done);
+});
+
+/**
+ * 雪碧图操作, 应该先拷贝图片并压缩合并css
+ */
+
+gulp.task('sprite', ['copy:img', 'stylus:min'], function(done) {
+    const timestamp = Number(new Date());
+    gulp.src(`dist/${mode}/css/common.min.css`)
+    .pipe(spriter({
+        spriteSheet: `dist/${mode}/img/spritesheet` + timestamp + '.png',
+        pathToSpriteSheetFromCSS: '../img/spritesheet' + timestamp + '.png',
+        spritesmithOptions: { padding: 10 }
+    }))
+    .pipe(base64())
+    .pipe(cssmin())
     .pipe(gulp.dest(`dist/${mode}/css`))
     .on('end', done);
 });
@@ -90,6 +110,20 @@ gulp.task('md5:css', [], function(done) {
 });
 
 /**
+ * 引用webpack对js进行操作
+ */
+
+const devCompiler = webpack(webpackConfig);
+
+gulp.task('build:js', function(callback) {
+    devCompiler.run(function(err, stats) {
+        if(err) throw new gutil.PluginError('webpack:build:js', err);
+        gutil.log('[webpack:build:js]', stats.toString({ colors: true }));
+        callback();
+    });
+});
+
+/**
  * 将js加上10位md5, 并修改html中的引用路径
  */
 
@@ -101,31 +135,11 @@ gulp.task('md5:js', ['build:js'], function(done) {
 });
 
 /**
- * 雪碧图操作, 应该先拷贝图片并压缩合并css
- */
-
-gulp.task('sprite', ['copy:img', 'stylus:min'], function(done) {
-    const timestamp = +new Date();
-    gulp.src(`dist/${mode}/css/common.min.css`)
-    .pipe(spriter({
-        spriteSheet: `dist/${mode}/img/spritesheet` + timestamp + '.png',
-        pathToSpriteSheetFromCSS: '../img/spritesheet' + timestamp + '.png',
-        spritesmithOptions: { padding: 10 }
-    }))
-    .pipe(base64())
-    .pipe(cssmin())
-    .pipe(gulp.dest(`dist/${mode}/css`))
-    .on('end', done);
-});
-
-/**
  * 清理编译目录
  */
 
-gulp.task('clean', function(done) {
-    gulp.src(['dist'])
-    .pipe(clean())
-    .on('end', done);
+gulp.task('del', function() {
+    return del(['dist'])
 });
 
 /**
@@ -133,8 +147,20 @@ gulp.task('clean', function(done) {
  */
 
 gulp.task('watch', function(done) {
-    gulp.watch(`src/${mode}/**/*`, ['stylus:min', 'build:js', 'file'])
+    gulp.watch(`src/${mode}/**/*`, ['copy:img', 'html', 'stylus:min', 'build:js'])
     .on('end', done);
+});
+
+/**
+ * 浏览器重载
+ */
+
+gulp.task('browser-sync', function() {
+    browserSync.init({
+        proxy: `127.0.0.1:${host.port}`
+    });
+    gulp.watch('src/**/*', ['copy:img', 'html', 'stylus:min', 'build:js']);
+    gulp.watch('src/**/*').on('change', browserSync.reload);
 });
 
 /**
@@ -151,36 +177,10 @@ gulp.task('open', function(done) {
 });
 
 /**
- * 浏览器重载
- */
-
-gulp.task('browser-sync', function() {
-    browserSync.init({
-        proxy: `127.0.0.1:${host.port}`
-    });
-    gulp.watch('src/**/*', ['copy:img', 'file', 'stylus:min', 'build:js', 'watch']);
-    gulp.watch('src/**/*').on('change', browserSync.reload);
-});
-
-const devCompiler = webpack(webpackConfig);
-
-/**
- * 引用webpack对js进行操作
- */
-
-gulp.task('build:js', function(callback) {
-    devCompiler.run(function(err, stats) {
-        if(err) throw new gutil.PluginError('webpack:build:js', err);
-        gutil.log('[webpack:build:js]', stats.toString({ colors: true }));
-        callback();
-    });
-});
-
-/**
  * 编译
  */
 
-gulp.task('make', ['copy:img', 'file', 'stylus:min', 'build:js']);
+gulp.task('make', sequence('del', 'copy:img', 'html', 'stylus:min', 'build:js'));
 
 /**
  * 打包
@@ -192,4 +192,4 @@ gulp.task('pack', ['connect', 'md5:css', 'md5:js', 'open']);
  * 开发
  */
 
-gulp.task('default', ['connect', 'make', 'watch', 'browser-sync']);
+gulp.task('default', ['connect', 'make', 'browser-sync']);

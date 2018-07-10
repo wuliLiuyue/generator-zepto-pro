@@ -20,7 +20,7 @@ function getEntry() {
 }
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     cache: true,
     devtool: 'source-map',
     entry: getEntry(),

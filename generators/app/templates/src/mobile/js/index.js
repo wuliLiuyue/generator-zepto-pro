@@ -4,4 +4,6 @@ async function load() {
 
 load();
 
+console.log($.ajax);
+
 export default load;

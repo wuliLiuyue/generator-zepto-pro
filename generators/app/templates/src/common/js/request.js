@@ -6,7 +6,6 @@ const instance = axios.create({
 
 // 设置请求拦截器
 instance.interceptors.request.use(config => {
-  let type = 'data';
   if(config.method === 'get') {
     type = 'params';
   }

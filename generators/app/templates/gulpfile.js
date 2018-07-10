@@ -15,7 +15,8 @@ const gulp = require('gulp'),
     connect = require('gulp-connect'),
     yargs = require('yargs'),
     browserSync = require('browser-sync').create(),
-    sequence = require('run-sequence');
+    sequence = require('run-sequence'),
+    proxyMiddleware = require('http-proxy-middleware');
 
 /**
  * 移动端8000端口, pc端9000端口
@@ -41,10 +42,17 @@ const browser = os.platform() === 'linux' ? 'Google chrome' : (
  */
 
 gulp.task('connect', function() {
+    const middleware = proxyMiddleware(['/mobile', '/pc'], {
+        target: 'http://127.0.0.1:6000/',
+        changeOrigin: true
+    });
     connect.server({
         root: host.path,
         port: host.port,
-        livereload: true
+        livereload: true,
+        middleware: function(connect, opt) {
+            return [middleware]
+        }
     });
 });
 

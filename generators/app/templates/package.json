@@ -5,7 +5,9 @@
   "author": "wulimark",
   "scripts": {
     "dev:mobile": "gulp --mode=mobile",
-    "build:mobile": "gulp pack --mode=mobile"
+    "build:mobile": "gulp pack --mode=mobile",
+    "dev:pc": "gulp --mode=pc",
+    "build:pc": "gulp pack --mode=pc"
   },
   "dependencies": {
     "axios": "^0.18.0",

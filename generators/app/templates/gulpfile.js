@@ -59,10 +59,20 @@ gulp.task('copy:img', function(done) {
 });
 
 /**
+ * extend文件转移
+ */
+
+gulp.task('extend', function (done) {
+    gulp.src([`src/${mode}/extend/*`])
+    .pipe(gulp.dest(`dist/${mode}/extend`))
+    .on('end', done);
+});
+
+/**
  * html文件转移
  */
 
-gulp.task('html', function (done) {
+gulp.task('html', ['extend'], function (done) {
     gulp.src([`src/${mode}/**/*.html`])
     .pipe(gulp.dest(`dist/${mode}`))
     .on('end', done);
@@ -139,7 +149,7 @@ gulp.task('md5:js', ['build:js'], function(done) {
  */
 
 gulp.task('del', function() {
-    return del(['dist'])
+    return del([`dist/${mode}`])
 });
 
 /**

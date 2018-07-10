@@ -1,10 +1,17 @@
+////////////////////////////////////////////////////////////////
+///                                                          ///
+///                   gulp多页面打包配置                       ///
+///                   静态服务、api接口代理                     ///
+///                   多页面自动刷新、webpack任务执行            ///
+///                                                          ///
+////////////////////////////////////////////////////////////////
+
 const gulp = require('gulp'),
     os = require('os'),
     gutil = require('gulp-util'),
     stylus = require('gulp-stylus'),
     concat = require('gulp-concat'),
     gulpOpen = require('gulp-open'),
-    uglify = require('gulp-uglify'),
     cssmin = require('gulp-cssmin'),
     md5 = require('gulp-md5-plus'),
     del = require('del'),
@@ -16,10 +23,13 @@ const gulp = require('gulp'),
     yargs = require('yargs'),
     browserSync = require('browser-sync').create(),
     sequence = require('run-sequence'),
-    proxyMiddleware = require('http-proxy-middleware');
+    proxyMiddleware = require('http-proxy-middleware'),
+    autoprefixer = require('gulp-autoprefixer'),
+    px2rem = require('gulp-px2rem');
 
 /**
  * 移动端8000端口, pc端9000端口
+ * mac chrome: 'Google chrome'
  */
 
 const mode = yargs.argv.mode;
@@ -28,10 +38,6 @@ const host = {
     port: mode == 'mobile' ? 8000 : 9000,
     html: 'index.html'
 };
-
-/**
- * mac chrome: 'Google chrome'
- */
 
 const browser = os.platform() === 'linux' ? 'Google chrome' : (
   os.platform() === 'darwin' ? 'Google chrome' : (
@@ -58,7 +64,7 @@ gulp.task('connect', function() {
 });
 
 /**
- * 图片文件转移
+ * 图片、extend、html文件转移
  */
 
 gulp.task('copy:img', function(done) {
@@ -67,19 +73,11 @@ gulp.task('copy:img', function(done) {
     .on('end', done);
 });
 
-/**
- * extend文件转移
- */
-
 gulp.task('extend', function (done) {
     gulp.src([`src/${mode}/extend/*`])
     .pipe(gulp.dest(`dist/${mode}/extend`))
     .on('end', done);
 });
-
-/**
- * html文件转移
- */
 
 gulp.task('html', ['extend'], function (done) {
     gulp.src([`src/${mode}/**/*.html`])
@@ -89,19 +87,30 @@ gulp.task('html', ['extend'], function (done) {
 
 /**
  * 压缩合并css
+ * 雪碧图操作, 应该先拷贝图片并压缩合并css
+ * 将css加上10位md5, 并修改html中的引用路径
  */
 
 gulp.task('stylus:min', function(done) {
     gulp.src([`src/${mode}/css/*`])
     .pipe(stylus())
+    .pipe(autoprefixer({
+        browsers: ['last 2 versions', 'Firefox ESR', '> 1%', 'ie >= 8', 'iOS 7', 'last 3 Safari versions'],
+        cascade: false
+    }))
+    .pipe(px2rem({
+        rootValue: 37.5,
+        unitPrecision: 5,
+        propertyBlackList: ['font-size'],
+        propertyWhiteList: [],
+        replace: true,
+        mediaQuery: true,
+        minPixelValue: 0
+    }))
     .pipe(concat('common.min.css'))
     .pipe(gulp.dest(`dist/${mode}/css`))
     .on('end', done);
 });
-
-/**
- * 雪碧图操作, 应该先拷贝图片并压缩合并css
- */
 
 gulp.task('sprite', ['copy:img', 'stylus:min'], function(done) {
     const timestamp = Number(new Date());
@@ -117,10 +126,6 @@ gulp.task('sprite', ['copy:img', 'stylus:min'], function(done) {
     .on('end', done);
 });
 
-/**
- * 将css加上10位md5, 并修改html中的引用路径
- */
-
 gulp.task('md5:css', [], function(done) {
     gulp.src(`dist/${mode}/css/*.css`)
     .pipe(md5(10, `dist/${mode}/**/*.html`))
@@ -130,6 +135,7 @@ gulp.task('md5:css', [], function(done) {
 
 /**
  * 引用webpack对js进行操作
+ * 将js加上10位md5, 并修改html中的引用路径
  */
 
 const devCompiler = webpack(webpackConfig);
@@ -142,10 +148,6 @@ gulp.task('build:js', function(callback) {
     });
 });
 
-/**
- * 将js加上10位md5, 并修改html中的引用路径
- */
-
 gulp.task('md5:js', ['build:js'], function(done) {
     gulp.src(`dist/${mode}/js/*.js`)
     .pipe(md5(10, `dist/${mode}/**/*.html`))
@@ -155,24 +157,19 @@ gulp.task('md5:js', ['build:js'], function(done) {
 
 /**
  * 清理编译目录
+ * 实时编译
+ * 浏览器重载
+ * 打开浏览器
  */
 
 gulp.task('del', function() {
     return del([`dist/${mode}`])
 });
 
-/**
- * 实时编译
- */
-
 gulp.task('watch', function(done) {
     gulp.watch(`src/${mode}/**/*`, ['copy:img', 'html', 'stylus:min', 'build:js'])
     .on('end', done);
 });
-
-/**
- * 浏览器重载
- */
 
 gulp.task('browser-sync', function() {
     browserSync.init({
@@ -181,10 +178,6 @@ gulp.task('browser-sync', function() {
     gulp.watch('src/**/*', ['copy:img', 'html', 'stylus:min', 'build:js']);
     gulp.watch('src/**/*').on('change', browserSync.reload);
 });
-
-/**
- * 打开浏览器
- */
 
 gulp.task('open', function(done) {
     gulp.src('')

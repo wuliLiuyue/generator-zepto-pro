@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////
+///                                                          ///
+///                   webpack打包配置                         ///
+///                   eslint、stylus、babel编译               ///
+///                   代码提取优化                             ///
+///                                                          ///
+////////////////////////////////////////////////////////////////
+
 const path = require('path');
 const fs = require('fs');
 const yargs = require('yargs');
@@ -11,9 +19,9 @@ const srcDir = path.resolve(__dirname, `../src/${mode}`);
  */
 
 function getEntry() {
-    var jsPath = path.resolve(srcDir, 'js');
-    var dirs = fs.readdirSync(jsPath);
-    var matchs = [], files = {};
+    const jsPath = path.resolve(srcDir, 'js');
+    const dirs = fs.readdirSync(jsPath);
+    let matchs = [], files = {};
     dirs.forEach(function (item) {
         matchs = item.match(/(.+)\.js$/);
         if (matchs) {
@@ -35,8 +43,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, `../dist/${mode}/js`),
         publicPath: `../dist/${mode}/js`,
-        filename: '[name].js',
-        chunkFilename: '[chunkhash].js'
+        filename: '[name].js'
     },
     module: {
         noParse: /es6-promise\.js$/,
@@ -54,7 +61,9 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                use: 'babel-loader?cacheDirectory=true',
+                use: [{
+                    loader: 'babel-loader?cacheDirectory=true'
+                }],
                 include: [ path.resolve('src') ]
             },
             {
@@ -70,6 +79,25 @@ module.exports = {
         ]
     },
     plugins: [
-        new UglifyJsPlugin()
+        new UglifyJsPlugin({
+            cache: true,
+            parallel: true,
+            sourceMap: true
+        }),
+        new webpack.optimize.SplitChunksPlugin({
+            chunks: 'all',
+            minSize: 20000,
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            name: true,
+            cacheGroups: {
+                common: {
+                    name: 'common',
+                    chunks: 'initial',
+                    minChunks: 2
+                }
+            }
+        })
     ]
 };

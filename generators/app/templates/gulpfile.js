@@ -39,6 +39,7 @@ const browser = os.platform() === 'linux' ? 'Google chrome' : (
 
 /**
  * 创建静态服务
+ * api接口代理
  */
 
 gulp.task('connect', function() {
@@ -51,7 +52,7 @@ gulp.task('connect', function() {
         port: host.port,
         livereload: true,
         middleware: function(connect, opt) {
-            return [middleware]
+            return [middleware];
         }
     });
 });

@@ -2,10 +2,14 @@ const path = require('path');
 const fs = require('fs');
 const yargs = require('yargs');
 const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const mode = yargs.argv.mode;
 const srcDir = path.resolve(__dirname, `../src/${mode}`);
 
-//获取多页面的每个入口文件, 用于配置中的entry
+/**
+ * 获取多页面的每个入口文件, 用于配置中的entry
+ */
+
 function getEntry() {
     var jsPath = path.resolve(srcDir, 'js');
     var dirs = fs.readdirSync(jsPath);
@@ -18,6 +22,10 @@ function getEntry() {
     });
     return files;
 }
+
+/**
+ * 打包配置
+ */
 
 module.exports = {
     mode: 'production',
@@ -35,26 +43,33 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                loader: 'eslint-loader',
+                use: [{
+                    loader: 'eslint-loader',
+                    options: {
+                        formatter: require('eslint-friendly-formatter')
+                    }
+                }],
                 enforce: 'pre',
-                include: [path.resolve('src')],
-                options: {
-                    formatter: require('eslint-friendly-formatter')
-                }
+                include: [ path.resolve('src') ]
             },
             {
                 test: /\.js$/,
-                loader: 'babel-loader?cacheDirectory=true',
-                include: [path.resolve('src')]
+                use: 'babel-loader?cacheDirectory=true',
+                include: [ path.resolve('src') ]
             },
             {
                 test: /\.(woff2?|eot|ttf|otf|png|jpg|gif|svg)$/,
-                loader: 'url-loader',
-                options: {
-                    limit: 5000,
-                    name: '[name].[ext]?[hash]'
-                }
+                use: [{
+                    loader: 'url-loader',
+                    options: {
+                        limit: 5000,
+                        name: '[name].[ext]?[hash]'
+                    }
+                }]
             }
         ]
-    }
+    },
+    plugins: [
+        new UglifyJsPlugin()
+    ]
 };

@@ -14,9 +14,13 @@ const gulp = require('gulp'),
     webpackConfig = require('./config/webpack.conf.js'),
     connect = require('gulp-connect'),
     yargs = require('yargs'),
-    browserSync = require('browser-sync').create();
+    browserSync = require('browser-sync').create(),
+    sequence = require('run-sequence');
 
-//移动端8000端口, pc端9000端口
+/**
+ * 移动端8000端口, pc端9000端口
+ */
+
 const mode = yargs.argv.mode;
 const host = {
     path: `dist/${mode}/`,
@@ -24,19 +28,18 @@ const host = {
     html: 'index.html'
 };
 
-//mac chrome: 'Google chrome'
+/**
+ * mac chrome: 'Google chrome'
+ */
+
 const browser = os.platform() === 'linux' ? 'Google chrome' : (
   os.platform() === 'darwin' ? 'Google chrome' : (
   os.platform() === 'win32' ? 'chrome' : 'firefox'));
 
-//清理编译目录
-gulp.task('clean', function(done) {
-    gulp.src(['dist'])
-    .pipe(clean())
-    .on('end', done);
-});
+/**
+ * 创建静态服务
+ */
 
-//创建静态服务
 gulp.task('connect', function() {
     connect.server({
         root: host.path,
@@ -45,19 +48,28 @@ gulp.task('connect', function() {
     });
 });
 
-//文件转移
+/**
+ * 文件转移
+ */
+
 gulp.task('file', function (done) {
     gulp.src([`src/${mode}/**/*.html`])
     .pipe(gulp.dest(`dist/${mode}`))
     .on('end', done);
 });
 
-//将图片拷贝到目标目录
+/**
+ * 将图片拷贝到目标目录
+ */
+
 gulp.task('copy:img', function(done) {
     gulp.src([`src/${mode}/img/*`]).pipe(gulp.dest(`dist/${mode}/img`)).on('end', done);
 });
 
-//压缩合并css
+/**
+ * 压缩合并css
+ */
+
 gulp.task('stylus:min', function(done) {
     gulp.src([`src/${mode}/css/*`])
     .pipe(stylus())
@@ -66,7 +78,10 @@ gulp.task('stylus:min', function(done) {
     .on('end', done);
 });
 
-//将css加上10位md5, 并修改html中的引用路径
+/**
+ * 将css加上10位md5, 并修改html中的引用路径
+ */
+
 gulp.task('md5:css', [], function(done) {
     gulp.src(`dist/${mode}/css/*.css`)
     .pipe(md5(10, `dist/${mode}/**/*.html`))
@@ -74,7 +89,10 @@ gulp.task('md5:css', [], function(done) {
     .on('end', done);
 });
 
-//将js加上10位md5, 并修改html中的引用路径
+/**
+ * 将js加上10位md5, 并修改html中的引用路径
+ */
+
 gulp.task('md5:js', ['build:js'], function(done) {
     gulp.src(`dist/${mode}/js/*.js`)
     .pipe(md5(10, `dist/${mode}/**/*.html`))
@@ -82,7 +100,10 @@ gulp.task('md5:js', ['build:js'], function(done) {
     .on('end', done);
 });
 
-//雪碧图操作, 应该先拷贝图片并压缩合并css
+/**
+ * 雪碧图操作, 应该先拷贝图片并压缩合并css
+ */
+
 gulp.task('sprite', ['copy:img', 'stylus:min'], function(done) {
     const timestamp = +new Date();
     gulp.src(`dist/${mode}/css/common.min.css`)
@@ -97,13 +118,29 @@ gulp.task('sprite', ['copy:img', 'stylus:min'], function(done) {
     .on('end', done);
 });
 
-//实时编译
+/**
+ * 清理编译目录
+ */
+
+gulp.task('clean', function(done) {
+    gulp.src(['dist'])
+    .pipe(clean())
+    .on('end', done);
+});
+
+/**
+ * 实时编译
+ */
+
 gulp.task('watch', function(done) {
     gulp.watch(`src/${mode}/**/*`, ['stylus:min', 'build:js', 'file'])
     .on('end', done);
 });
 
-//打开浏览器
+/**
+ * 打开浏览器
+ */
+
 gulp.task('open', function(done) {
     gulp.src('')
     .pipe(gulpOpen({
@@ -113,8 +150,11 @@ gulp.task('open', function(done) {
     .on('end', done);
 });
 
-//浏览器重载
-gulp.task('browser-sync', function () {
+/**
+ * 浏览器重载
+ */
+
+gulp.task('browser-sync', function() {
     browserSync.init({
         proxy: `127.0.0.1:${host.port}`
     });
@@ -124,7 +164,10 @@ gulp.task('browser-sync', function () {
 
 const devCompiler = webpack(webpackConfig);
 
-//引用webpack对js进行操作
+/**
+ * 引用webpack对js进行操作
+ */
+
 gulp.task('build:js', function(callback) {
     devCompiler.run(function(err, stats) {
         if(err) throw new gutil.PluginError('webpack:build:js', err);
@@ -133,11 +176,20 @@ gulp.task('build:js', function(callback) {
     });
 });
 
-//编译
-gulp.task('pack', ['copy:img', 'file', 'stylus:min', 'build:js']);
+/**
+ * 编译
+ */
 
-//开发
-gulp.task('dev', ['connect', 'pack', 'watch', 'browser-sync']);
+gulp.task('make', ['copy:img', 'file', 'stylus:min', 'build:js']);
 
-//发布
-gulp.task('default', ['pack', 'md5:css', 'md5:js']);
+/**
+ * 打包
+ */
+
+gulp.task('pack', ['connect', 'md5:css', 'md5:js', 'open']);
+
+/**
+ * 开发
+ */
+
+gulp.task('default', ['connect', 'make', 'watch', 'browser-sync']);

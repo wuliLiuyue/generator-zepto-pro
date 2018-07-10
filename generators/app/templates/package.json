@@ -4,9 +4,8 @@
   "private": true,
   "author": "wulimark",
   "scripts": {
-    "dev:mobile": "gulp dev --mode=mobile",
-    "build:mobile": "gulp --mode=mobile",
-    "clean:mobile": "gulp clean --mode=mobile"
+    "dev:mobile": "gulp --mode=mobile",
+    "build:mobile": "gulp pack --mode=mobile"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -41,6 +40,7 @@
     "gulp-stylus": "^2.7.0",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
+    "run-sequence": "^2.2.1",
     "url-loader": "^1.0.1",
     "webpack": "^4.15.1",
     "yargs": "^12.0.1"

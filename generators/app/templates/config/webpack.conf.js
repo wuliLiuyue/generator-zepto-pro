@@ -22,7 +22,7 @@ function getEntry() {
 module.exports = {
     mode: 'development',
     cache: true,
-    devtool: true,
+    devtool: 'source-map',
     entry: getEntry(),
     output: {
         path: path.join(__dirname, `../dist/${mode}/js`),

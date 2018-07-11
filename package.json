@@ -4,7 +4,8 @@
   "description": "a generator based jquery and zepto for mobile&amp;pc",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ts": "webpack --config ./config/webpack.conf.js"
   },
   "repository": {
     "type": "git",
@@ -30,5 +31,11 @@
     "chalk": "^2.4.1",
     "yeoman-generator": "^3.0.0",
     "yosay": "^2.0.2"
+  },
+  "devDependencies": {
+    "ts-loader": "^4.4.2",
+    "typescript": "^2.9.2",
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.8"
   }
 }

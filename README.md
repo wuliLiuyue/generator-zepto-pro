@@ -1,4 +1,4 @@
-# generator-jquery-mobile-pc
+# generator-zepto-ms
 jquery zepto项目脚手架 支持热更新、mock数据
 
 ####ChangeLog
@@ -6,13 +6,13 @@ jquery zepto项目脚手架 支持热更新、mock数据
 
 ####Install
 ```
-sudo npm install yo generator-jquery-mobile-pc -g
+sudo npm install yo generator-zepto-ms -g
 ```
 ####How to use
 * 安装脚手架
 ```
 mkdir webapp && cd webapp
-yo jquery-mobile-pc
+yo zepto-ms
 npm run dev:mobile 启动服务
 npm run build:mobile 打包编译
 npm run dev:pc

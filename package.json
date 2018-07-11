@@ -1,6 +1,6 @@
 {
-  "name": "generator-jquery-mobile-pc",
-  "version": "1.1.0",
+  "name": "generator-zepto-ms",
+  "version": "1.2.0",
   "description": "a generator based jquery and zepto for mobile&amp;pc",
   "main": "index.js",
   "scripts": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wulimark/generator-jquery-mobile-pc.git"
+    "url": "git+https://github.com/wulimark/generator-zepto-ms.git"
   },
   "author": "wulimark@hz",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wulimark/generator-jquery-mobile-pc/issues"
+    "url": "https://github.com/wulimark/generator-zepto-ms/issues"
   },
-  "homepage": "https://github.com/wulimark/generator-jquery-mobile-pc#readme",
+  "homepage": "https://github.com/wulimark/generator-zepto-ms#readme",
   "files": [
     "generators"
   ],

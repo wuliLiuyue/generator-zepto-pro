@@ -29,6 +29,8 @@
   ],
   "dependencies": {
     "chalk": "^2.4.1",
+    "figlet": "^1.2.0",
+    "ora": "^2.1.0",
     "yeoman-generator": "^3.0.0",
     "yosay": "^2.0.2"
   },

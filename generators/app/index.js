@@ -63,21 +63,21 @@ module.exports = class app extends generators {
         default: '1.0.0'
       },
       {
-        name: 'mode',
         type: 'list',
+        name: 'mode',
         message: '请选择包含的子项目类型',
         choices: [
           {
-            name: '只生成mobile项目',
+            name: '生成mobile及pc项目',
             value: 0,
             checked: 0
           },
           {
-            name: '只生成pc项目',
+            name: '只生成mobile项目',
             value: 1
           },
           {
-            name: '生成mobile及pc项目',
+            name: '只生成pc项目',
             value: 2
           }
         ]
@@ -119,12 +119,73 @@ module.exports = class app extends generators {
     this.fs.writeJSON(this.destinationPath('package.json'), packageSettings);
     const spinner = ora('架构配置生成完毕, 进入架构目录生成流程').succeed();
   };
+
+  /**
+   * 目录生成
+   */
+
+  async writing() {
+    const readdir = util.promisify(fs.readdir);
+    const files = await readdir(this.templatePath());
+    const uncopy_files = [
+      'dist',
+      'node_modules',
+      'package-lock.json',
+      'package.json',
+    ];
+    let copy_files = files.filter(item => uncopy_files.indexOf(item) < 0);
+    copy_files.map(item => this.fs.copy(
+      this.templatePath(item),
+      this.destinationPath(item)
+    ));
+    this.async();
+  };
+
+  /**
+   * 安装依赖
+   */
+
+  install() {
+    if (this.mode) {
+      let dir = ['mobile', 'pc'];
+      removeDir(this.destinationPath(`mock/${dir[dir.length - this.mode]}`));
+      removeDir(this.destinationPath(`src/${dir[dir.length - this.mode]}`));
+    }
+    const spinner = ora('架构目录生成完毕, 进入依赖安装流程').succeed();
+
+    /**
+     * 递归删除目录
+     */
+
+    function removeDir(dir) {
+      let files = fs.readdirSync(dir);
+      files.map((item, i) => {
+        let _path = path.join(dir, files[i]);
+        let stat = fs.statSync(_path);
+        if (stat.isDirectory()) {
+          removeDir(_path);
+        } else {
+          fs.unlinkSync(_path);
+        }
+      });
+      fs.rmdirSync(dir);
+    };
+
+    this.installDependencies({
+      bower: false,
+      npm: true,
+      callback: function() {
+        const spinner = ora('npm依赖安装完毕').succeed();
+      }
+    });
+  };
  
   /**
    * 构建完成
    */
 
   end() {
+    const spinner = ora('脚手架构建完毕').succeed();
     figlet('KKL FE TEAM', (err, data) => {
         if (err) {
             this.log(chalk.red('Something went wrong...'));

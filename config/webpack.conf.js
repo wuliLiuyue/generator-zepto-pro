@@ -33,12 +33,14 @@ const BaseConf = {
  * 打包配置
  */
 
-module.exports = [Object.assign({}, BaseConf, {
-    entry: {
-        app: path.join(__dirname, '../generators/app/index.ts')
-    },
-    output: {
-        path: path.join(__dirname, `../generators/app`),
-        filename: 'index.js'
-    }
-})];
+module.exports = [
+  Object.assign({}, BaseConf, {
+      entry: {
+          app: path.join(__dirname, '../generators/app/index.ts')
+      },
+      output: {
+          path: path.join(__dirname, `../generators/app`),
+          filename: 'index.js'
+      }
+  })
+];

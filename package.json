@@ -1,6 +1,6 @@
 {
   "name": "generator-jquery-mobile-pc",
-  "version": "1.0.0@alpha",
+  "version": "1.0.0",
   "description": "a generator based jquery and zepto for mobile&amp;pc",
   "main": "index.js",
   "scripts": {

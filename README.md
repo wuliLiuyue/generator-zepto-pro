@@ -1,2 +1,21 @@
 # generator-jquery-mobile-pc
-a generator based jquery and zepto for mobile&amp;pc
+jquery zepto项目脚手架 支持热更新、mock数据
+
+####ChangeLog
+* 1.1.0 测试版本发布
+
+####Install
+```
+sudo npm install yo generator-jquery-mobile-pc -g
+```
+####How to use
+* 安装脚手架
+```
+mkdir webapp && cd webapp
+yo jquery-mobile-pc
+npm run dev:mobile 启动服务
+npm run build:mobile 打包编译
+npm run dev:pc
+npm run build:pc
+npm run mock 启动mock服务
+```

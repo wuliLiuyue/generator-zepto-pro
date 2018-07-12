@@ -1,6 +1,6 @@
 {
-  "name": "generator-zepto-ms",
-  "version": "1.4.0",
+  "name": "generator-zepto-pro",
+  "version": "1.5.0",
   "description": "a generator based jquery and zepto for mobile sites",
   "main": "index.js",
   "scripts": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wulimark/generator-zepto-ms.git"
+    "url": "git+https://github.com/wulimark/generator-zepto-pro.git"
   },
   "author": "wulimark@hz",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wulimark/generator-zepto-ms/issues"
+    "url": "https://github.com/wulimark/generator-zepto-pro/issues"
   },
-  "homepage": "https://github.com/wulimark/generator-zepto-ms#readme",
+  "homepage": "https://github.com/wulimark/generator-zepto-pro#readme",
   "files": [
     "generators"
   ],

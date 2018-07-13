@@ -9,8 +9,6 @@ const getList = {
     "subjectId": 3,
     "subjectName": "英语",
     "teacherId": 3130879,
-    "teacherName": "史弘斌",
-    "title": "20180528 史弘斌老师的英语作业2",
     "totalCompleteStudent": 0,
     "totalLesson": 2,
     "totalLessonDuration": 482,

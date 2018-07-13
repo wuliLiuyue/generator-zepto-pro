@@ -28,7 +28,9 @@ module.exports = class router extends generators {
    * 脚手架初始化
    */
 
-  initializing() {
-    console.log('test');
+  async initializing() {
+    const readdir = util.promisify(fs.readdir);
+    const files = await readdir(this.templatePath());
+    console.log(this.destinationPath());
   };
 };

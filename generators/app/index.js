@@ -30,17 +30,19 @@ module.exports = class app extends generators {
    * 脚手架初始化
    */
 
-  initializing() {
-    figlet('ZEPTO PRO', (err, data) => {
-        if (err) {
-            this.log(chalk.red('Something went wrong...'));
-            console.dir(err);
-            return;
-        }
-        this.log(data);
-    });
+  async initializing() {
+    const _figlet = util.promisify(figlet);
+    try {
+      let data = await _figlet('ZEPTO PRO');
+      this.log(data);
+    } catch(err) {
+      this.log(chalk.red('Something went wrong...'));
+      console.dir(err);
+      return;
+    }
     this.log(chalk.green('🦄  脚手架项目开始构建准备...请稍候...'));
     const spinner = ora('进入构建流程').succeed();
+    this.async();
   };
 
   /**

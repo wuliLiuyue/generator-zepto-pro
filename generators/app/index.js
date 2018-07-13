@@ -31,14 +31,14 @@ module.exports = class app extends generators {
    */
 
   initializing() {
-    console.log(`
- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
- |||                                                    |||
- |||           mobile and pc project generator          |||
- |||           support es6 stylus zepto jquery          |||
- |||                                                    |||
- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-    `);
+    figlet('ZEPTO PRO', (err, data) => {
+        if (err) {
+            this.log(chalk.red('Something went wrong...'));
+            console.dir(err);
+            return;
+        }
+        this.log(data);
+    });
     this.log(chalk.green('🦄  脚手架项目开始构建准备...请稍候...'));
     const spinner = ora('进入构建流程').succeed();
   };

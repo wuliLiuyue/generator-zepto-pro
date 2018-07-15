@@ -22,8 +22,8 @@ npm run mock 启动mock服务
 ```
 * 添加新页面模版
 ```
-yo zepto-pro --mode=mobile --name=新页面名称 mobile项目添加新页面
-yo zepto-pro --mode=pc --name=新页面名称 pc项目添加新页面
+yo zepto-pro:router --mode=mobile --name=新页面名称 mobile项目添加新页面
+yo zepto-pro:router --mode=pc --name=新页面名称 pc项目添加新页面
 ```
 
 ```

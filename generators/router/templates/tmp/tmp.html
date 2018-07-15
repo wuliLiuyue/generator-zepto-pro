@@ -2,19 +2,25 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <% if (is_mobile) { %>
     <meta name="theme-color" content="#f60">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <script src="http://g.tbcdn.cn/mtb/lib-flexible/0.3.4/??flexible_css.js,flexible.js"></script> 
-    <title>detail</title>
+    <script src="http://g.tbcdn.cn/mtb/lib-flexible/0.3.4/??flexible_css.js,flexible.js"></script>
+    <% } %>
+    <title><%= name %></title>
     <link rel="stylesheet" href="../css/common.min.css">
   </head>
   <body>
-    <div class="detail">detail</div>
+    <div class="<%= name %>"><%= name %></div>
+  <% if (is_mobile) { %>
   <script src="http://apps.bdimg.com/libs/zepto/1.1.4/zepto.min.js"></script>
+  <% } else { %>
+  <script src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
+  <% } %>
   <script src="../js/common.js"></script>
-  <script src="../js/detail.js"></script>
+  <script src="../js/<%= name %>.js"></script>
   </body>
 </html>

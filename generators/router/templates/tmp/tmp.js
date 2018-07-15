@@ -2,10 +2,10 @@ import request from '../../common/js/request';
 
 request('/mobile/getList');
 
-async function test() {
-  console.log('test');
+async function tmp() {
+  console.log('tmp');
 }
 
-test();
+tmp();
 
-export default test;
+export default tmp;

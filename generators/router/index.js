@@ -1,8 +1,8 @@
-////////////////////////////////////////////////////////////////
-///                                                          ///
-///                   yeoman子项目构建逻辑                       ///
-///                   继承自yeoman-generator类                ///
-///                   在生命周期回调中注入动态逻辑               ///
+/////////////////////////////////////////////////////////////////
+///                                                           ///
+///                   yeoman子项目构建逻辑                      ///
+///                   继承自yeoman-generator类                 ///
+///                   在生命周期回调中注入动态逻辑                ///
 ///                                                          ///
 ////////////////////////////////////////////////////////////////
 
@@ -31,6 +31,5 @@ module.exports = class router extends generators {
   async initializing() {
     const readdir = util.promisify(fs.readdir);
     const files = await readdir(this.templatePath());
-    console.log(this.destinationPath());
   };
 };

@@ -25,7 +25,8 @@ const gulp = require('gulp'),
     sequence = require('run-sequence'),
     proxyMiddleware = require('http-proxy-middleware'),
     autoprefixer = require('gulp-autoprefixer'),
-    px2rem = require('gulp-px2rem');
+    postcss = require('gulp-postcss'),
+    px2rem = require('postcss-px2rem');
 
 /**
  * 移动端8000端口, pc端9000端口
@@ -92,21 +93,14 @@ gulp.task('html', ['extend'], function (done) {
  */
 
 gulp.task('stylus:min', function(done) {
+    const processors = mode == 'mobile' ? [ px2rem({ remUnit: 37.5 }) ] : [];
     gulp.src([`src/${mode}/css/*`])
     .pipe(stylus())
     .pipe(autoprefixer({
         browsers: ['last 2 versions', 'Firefox ESR', '> 1%', 'ie >= 8', 'iOS 7', 'last 3 Safari versions'],
         cascade: false
     }))
-    .pipe(px2rem({
-        rootValue: 37.5,
-        unitPrecision: 5,
-        propertyBlackList: ['font-size'],
-        propertyWhiteList: [],
-        replace: true,
-        mediaQuery: true,
-        minPixelValue: 0
-    }))
+    .pipe(postcss(processors))
     .pipe(concat('common.min.css'))
     .pipe(gulp.dest(`dist/${mode}/css`))
     .on('end', done);
@@ -166,17 +160,14 @@ gulp.task('del', function() {
     return del([`dist/${mode}`])
 });
 
-gulp.task('watch', function(done) {
-    gulp.watch(`src/${mode}/**/*`, ['copy:img', 'html', 'stylus:min', 'build:js'])
-    .on('end', done);
-});
-
 gulp.task('browser-sync', function() {
     browserSync.init({
         proxy: `127.0.0.1:${host.port}`
     });
     gulp.watch('src/**/*', ['copy:img', 'html', 'stylus:min', 'build:js']);
-    gulp.watch('src/**/*').on('change', browserSync.reload);
+    setTimeout(function () {
+        gulp.watch('src/**/*').on('change', browserSync.reload);
+    }, 6000);
 });
 
 gulp.task('open', function(done) {

@@ -51,7 +51,7 @@ const browser = os.platform() === 'linux' ? 'Google chrome' : (
 
 gulp.task('connect', function() {
     const middleware = proxyMiddleware(['/mobile', '/pc'], {
-        target: 'http://127.0.0.1:6000/',
+        target: 'http://127.0.0.1:5500/',
         changeOrigin: true
     });
     connect.server({
@@ -164,10 +164,10 @@ gulp.task('browser-sync', function() {
     browserSync.init({
         proxy: `127.0.0.1:${host.port}`
     });
-    gulp.watch('src/**/*', ['copy:img', 'html', 'stylus:min', 'build:js']);
-    setTimeout(function () {
-        gulp.watch('src/**/*').on('change', browserSync.reload);
-    }, 6000);
+    let _watch = gulp.watch('src/**/*', ['copy:img', 'html', 'stylus:min', 'build:js']);
+    _watch.on('change', function() {
+        browserSync.reload();
+    });
 });
 
 gulp.task('open', function(done) {

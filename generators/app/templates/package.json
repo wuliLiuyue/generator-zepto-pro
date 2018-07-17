@@ -1,5 +1,5 @@
 {
-  "name": "zepto-ms",
+  "name": "zepto-pro",
   "version": "1.1.0",
   "private": true,
   "author": "wulimark",
@@ -8,7 +8,7 @@
     "build:mobile": "gulp pack --mode=mobile",
     "dev:pc": "gulp --mode=pc",
     "build:pc": "gulp pack --mode=pc",
-    "mock": "kakashi --config=mock/kakashi.mock.js --port=6000 --watch=mock/"
+    "mock": "kakashi --config=mock/kakashi.mock.js --port=5500 --watch=mock/"
   },
   "dependencies": {
     "axios": "^0.18.0"

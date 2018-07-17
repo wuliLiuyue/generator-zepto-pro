@@ -6,10 +6,8 @@
 ///                                                          ///
 ////////////////////////////////////////////////////////////////
 
-const path = require('path');
 const fs = require('fs');
 const util = require('util');
-const chalk = require('chalk');
 const generators = require('yeoman-generator');
 const ora = require('ora');
 const yargs = require('yargs');

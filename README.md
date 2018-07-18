@@ -55,3 +55,11 @@ yo zepto-pro:router --mode=pc --name=新页面名称 pc项目添加新页面
   </body>
 </html>
 ```
+
+####Issues
+* 淘宝镜像源同步npm官方包出现问题
+* cnpm版本落后于npm官方需手动同步代码包
+```
+cnpm sync generator-zepto-pro
+cnpm install generator-zepto-pro -g
+```

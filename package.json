@@ -1,6 +1,6 @@
 {
   "name": "generator-zepto-pro",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "a generator based jquery and zepto for mobile sites",
   "main": "index.js",
   "scripts": {

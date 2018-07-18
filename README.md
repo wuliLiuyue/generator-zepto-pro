@@ -1,14 +1,16 @@
 # generator-zepto-pro
-jquery zepto项目脚手架 支持热更新、mock数据
+jquery zepto项目脚手架 支持热更新、mock数据、命令行新增模版页面
 
 ####ChangeLog
 * 1.1.0 测试版本发布
 * 1.10.0 框架新特性功能: 命令行添加新页面模版(在对应目录下新增css、js、html, 并在html中填入对应新增文件链接)
+* 2.0.0 LTS 稳定版本: windows bug、cnpm镜像同步问题修复
 
 ####Install
 ```
 sudo npm install yo generator-zepto-pro -g
 ```
+
 ####How to use
 * 安装脚手架
 ```
@@ -20,14 +22,15 @@ npm run dev:pc
 npm run build:pc
 npm run mock 启动mock服务
 ```
+
 * 添加新页面模版
 ```
 yo zepto-pro:router --mode=mobile --name=新页面名称 mobile项目添加新页面
 yo zepto-pro:router --mode=pc --name=新页面名称 pc项目添加新页面
 ```
 
+* 动态生成新页面html, 并插入对应css、js文件链接
 ```
-动态生成新页面html, 并插入对应css、js文件链接
 <!DOCTYPE html>
 <html>
   <head>

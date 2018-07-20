@@ -26,7 +26,8 @@ const gulp = require('gulp'),
     proxyMiddleware = require('http-proxy-middleware'),
     autoprefixer = require('gulp-autoprefixer'),
     postcss = require('gulp-postcss'),
-    px2rem = require('postcss-px2rem');
+    px2rem = require('postcss-px2rem'),
+    plumber = require('gulp-plumber');
 
 /**
  * 移动端8000端口, pc端9000端口
@@ -95,6 +96,11 @@ gulp.task('html', ['extend'], function (done) {
 gulp.task('stylus:min', function(done) {
     const processors = mode == 'mobile' ? [ px2rem({ remUnit: 37.5 }) ] : [];
     gulp.src([`src/${mode}/css/*`])
+    .pipe(plumber({
+        errorHander: function(error) {
+            this.emit('end');
+        }
+    }))
     .pipe(stylus())
     .pipe(autoprefixer({
         browsers: ['last 2 versions', 'Firefox ESR', '> 1%', 'ie >= 8', 'iOS 7', 'last 3 Safari versions'],

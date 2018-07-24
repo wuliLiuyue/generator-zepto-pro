@@ -20,11 +20,11 @@ instance.interceptors.request.use(config => {
 
 // 设置响应拦截器
 instance.interceptors.response.use(res => {
-  if (!res.data.success) {
+  if (!res.data) {
     return Promise.reject({
-      message: res.data.message || '当前网络不佳，请稍后再试',
-      code: res.data.code,
-      data: res.data.data
+      message: res.msg || '当前网络不佳，请稍后再试',
+      error: res.error,
+      data: res.data
     });
   }
   return res.data;

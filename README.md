@@ -17,8 +17,10 @@ sudo npm install yo generator-zepto-pro -g
 mkdir webapp && cd webapp
 yo zepto-pro
 npm run dev:mobile 启动服务
+npm run dev:mobile:mock 启动服务(mock代理协议)
 npm run build:mobile 打包编译
 npm run dev:pc
+npm run dev:pc:mock
 npm run build:pc
 npm run mock 启动mock服务
 ```

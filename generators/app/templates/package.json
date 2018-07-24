@@ -5,8 +5,10 @@
   "author": "wulimark",
   "scripts": {
     "dev:mobile": "gulp --mode=mobile",
+    "dev:mobile:mock": "gulp --mode=mobile --proxy=mock",
     "build:mobile": "gulp pack --mode=mobile",
     "dev:pc": "gulp --mode=pc",
+    "dev:pc:mock": "gulp --mode=pc --proxy=mock",
     "build:pc": "gulp pack --mode=pc",
     "mock": "kakashi --config=mock/kakashi.mock.js --port=5500 --watch=mock/"
   },

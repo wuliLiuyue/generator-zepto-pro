@@ -1,5 +1,5 @@
 const getList = {
-  'GET /mobile/getList': {
+  'GET /mock/getList': {
     "canRemindHomework": false,
     "createDate": false,
     "endTime": 1527557700000,

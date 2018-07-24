@@ -34,7 +34,7 @@ const gulp = require('gulp'),
  * mac chrome: 'Google chrome'
  */
 
-const mode = yargs.argv.mode;
+const { mode, proxy } = yargs.argv;
 const host = {
     path: `dist/${mode}/`,
     port: mode == 'mobile' ? 8000 : 9000,
@@ -51,7 +51,7 @@ const browser = os.platform() === 'linux' ? 'Google chrome' : (
  */
 
 gulp.task('connect', function() {
-    const middleware = proxyMiddleware(['/mobile', '/pc'], {
+    const middleware = proxyMiddleware(['/mock'], {
         target: 'http://127.0.0.1:5500/',
         changeOrigin: true
     });
@@ -94,7 +94,7 @@ gulp.task('html', ['extend'], function (done) {
  */
 
 gulp.task('stylus:min', function(done) {
-    const processors = mode == 'mobile' ? [ px2rem({ remUnit: 37.5 }) ] : [];
+    const processors = mode == 'mobile' ? [ px2rem({ remUnit: 75 }) ] : [];
     gulp.src([`src/${mode}/css/*`])
     .pipe(plumber({
         errorHander: function(error) {

@@ -11,7 +11,7 @@ const fs = require('fs');
 const yargs = require('yargs');
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const mode = yargs.argv.mode;
+const { mode, proxy } = yargs.argv;
 const srcDir = path.resolve(__dirname, `../src/${mode}`);
 
 /**
@@ -79,6 +79,9 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.DefinePlugin({
+          __PROXY__: proxy ? JSON.stringify(`/${proxy}`) : ''
+        }),
         new UglifyJsPlugin({
             cache: true,
             parallel: true,

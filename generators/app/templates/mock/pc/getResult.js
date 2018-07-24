@@ -1,5 +1,5 @@
-const getList = {
-  'GET /pc/getList': {
+const getResult = {
+  'GET /mock/getResult': {
     "canRemindHomework": false,
     "createDate": false,
     "endTime": 1527557700000,
@@ -22,4 +22,4 @@ const getList = {
   }
 };
 
-module.exports = getList;
+module.exports = getResult;

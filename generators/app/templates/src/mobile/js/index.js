@@ -1,6 +1,7 @@
 import request from '../../common/js/request';
+import $URL from '../fetch';
 
-request('/mobile/getList');
+request($URL.getList);
 
 async function test() {
   console.log('test');

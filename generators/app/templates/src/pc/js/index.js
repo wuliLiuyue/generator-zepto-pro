@@ -1,6 +1,7 @@
 import request from '../../common/js/request';
+import $URL from '../fetch';
 
-request('/pc/getList');
+request($URL.getResult);
 
 async function test() {
   console.log('test');
